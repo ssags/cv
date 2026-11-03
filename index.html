@@ -226,6 +226,63 @@ h3{margin:0 0 .2rem;font-size:1.3rem;line-height:1.25}
   .start{padding:0 1.1rem 0 .8rem;margin-right:.4rem}
   .menu-cols{grid-template-columns:1fr}.menu-cols ul+ul{border-left:0;border-top:1px solid var(--line)}
 }
+
+/* ===== Ajustes para celular / táctil ===== */
+.tray button .tl{display:inline}
+.menu{max-height:calc(100vh - 2.7rem);max-height:calc(100dvh - 2.7rem);overflow-y:auto}
+.taskbar{padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+.wrap{padding-left:max(.9rem,env(safe-area-inset-left,0px));padding-right:max(.9rem,env(safe-area-inset-right,0px))}
+
+/* fondo fijo que funciona en iOS (background-attachment:fixed no anda en Safari móvil) */
+@media (max-width:40rem),(hover:none) and (pointer:coarse){
+  body{background:transparent;min-height:100vh;min-height:100dvh}
+  html::before{content:"";position:fixed;inset:0;z-index:-3;pointer-events:none;
+    background:linear-gradient(180deg,var(--sky1) 0%,var(--sky2) 38%,var(--sky3) 72%,var(--sky4) 100%)}
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  .xp-btn,.tray button,.menu footer button{touch-action:manipulation}
+}
+
+/* BIOS en celu: sin ayuda de teclado, pestañas en una fila y botón principal grande */
+@media (max-width:42rem){
+  html.booting .boot{font-size:.92rem}
+  .bios-title{font-size:.72rem;padding:.55rem .6rem;line-height:1.35}
+  .bios-tabs{flex-wrap:nowrap;overflow-x:auto;gap:0 .3rem;padding:.2rem .6rem;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .bios-tabs::-webkit-scrollbar{display:none}
+  .bios-tabs button{flex:none;min-height:2.75rem;padding:0 .2rem;font-size:.82rem}
+  .bios-help{display:none}
+  .bios-panel{padding:1rem}
+  .bios-panel .act{min-height:2.75rem;padding:.4rem 1.2rem}
+  .bios-foot{position:sticky;bottom:0;background:#c9cbc6;flex-direction:column;align-items:stretch;gap:.6rem;
+    padding:.7rem 1rem calc(.7rem + env(safe-area-inset-bottom,0px))}
+  .bios-foot .btns{flex-direction:column;gap:.5rem}
+  .bios-foot a,.bios-foot button{min-height:2.75rem;display:flex;align-items:center;justify-content:center;text-align:center;padding:.4rem .8rem}
+  .bios-foot [data-boot]{order:-1;background:#a82459}
+  .bios-foot [hidden]{display:none}
+}
+
+/* sitio en celu */
+@media (max-width:40rem){
+  .wrap{padding-top:.9rem;padding-left:max(.6rem,env(safe-area-inset-left,0px));padding-right:max(.6rem,env(safe-area-inset-right,0px))}
+  .ctl>*{width:1.8rem;height:1.8rem}
+  .tb{min-height:2.5rem}
+  .hero .btns .xp-btn{flex:1 1 9rem;text-align:center;padding:.7rem 1rem}
+  .links{gap:.2rem 1.2rem}
+  .links a{display:inline-block;padding:.45rem 0}
+  .book li{padding:.8rem .9rem}
+  .book .acts .xp-btn{flex:1 1 auto;text-align:center;padding:.65rem .9rem}
+  .task{flex:0 0 auto;min-width:5.6rem}
+  .tray button{padding:.35rem .6rem}
+  .tray button .tl{display:none}
+  .menu-cols a{padding:.7rem 1rem}
+  .menu footer button{padding:.5rem 1rem}
+}
+@media (max-width:22.5rem){
+  .hero h1{font-size:2rem}
+  .tb h2,.tb .ttl{font-size:.9rem}
+}
+@media (max-height:30rem) and (orientation:landscape){
+  .hero{grid-template-columns:auto 1fr}.pic{width:7rem;height:7rem}
+}
 </style>
 </head>
 <body>
@@ -485,7 +542,7 @@ function pad(n){return (n<10?'0':'')+n}
 /* tema */
 var tbtn=document.getElementById('theme');
 function dark(){var t=r.getAttribute('data-theme');return t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches}
-function paintTheme(){var d=dark();tbtn.textContent=d?'Tema: oscuro':'Tema: claro';tbtn.setAttribute('aria-pressed',String(d))}
+function paintTheme(){var d=dark(),n=d?'oscuro':'claro';tbtn.innerHTML='Tema<span class="tl">: '+n+'</span>';tbtn.setAttribute('aria-label','Tema '+n+', tocar para cambiar');tbtn.setAttribute('aria-pressed',String(d))}
 paintTheme();
 tbtn.onclick=function(){var n=dark()?'light':'dark';r.setAttribute('data-theme',n);try{localStorage.setItem('theme',n)}catch(e){}paintTheme()};
 
